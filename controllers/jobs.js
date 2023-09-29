@@ -1,9 +1,9 @@
 const get = (req,res) => {
-    res.send()
+    res.send('hi')
 }
 
 const getall = (req,res) => {
-    res.send()
+    res.send('hi')
 }
 
 const del = (req,res) => {

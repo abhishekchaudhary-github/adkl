@@ -6,6 +6,7 @@ const authroutes = require('./routes/auth')
 const jobsroutes = require('./routes/jobs')
 const db = require('./db/connect')
 const url = process.env.mongodb_uri
+const authentications = require('./middleware/authentication')
 
 // error handler
 const notFoundMiddleware = require('./middleware/not-found');
@@ -15,8 +16,8 @@ app.use(express.json());
 // extra packages
 
 // routes
-app.use('/api/vi',authroutes)
-app.use('/api/vi',jobsroutes)
+app.use('/api/v1',authroutes)
+app.use('/api/v1',authentications,jobsroutes)
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

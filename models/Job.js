@@ -7,4 +7,4 @@ const schema = new mongoose.Schema({
     createdBy : String
 })
 
-module.exports = mongoose.model('Store',schema);
+module.exports = mongoose.model('Job',schema);
