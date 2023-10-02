@@ -1,16 +1,19 @@
-const get = (req,res) => {
+const Jobs = require('../models/Job')
+
+const get = async (req,res) => {
     res.send('hi')
 }
 
-const getall = (req,res) => {
+const getall = async (req,res) => {
+    await Jobs.find({});
     res.send('hi')
 }
 
-const del = (req,res) => {
+const del = async (req,res) => {
     res.send()
 }
 
-const update = (req,res) => {
+const update = async (req,res) => {
     res.send()
 }
 
