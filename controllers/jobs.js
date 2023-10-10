@@ -1,12 +1,13 @@
 const Jobs = require('../models/Job')
 
 const get = async (req,res) => {
-    res.send('hi')
+    res.send(req.user)
 }
 
 const getall = async (req,res) => {
-    await Jobs.find({});
-    res.send('hi')
+    // await Jobs.find({});
+    console.log('1')
+    res.json(req.user)
 }
 
 const del = async (req,res) => {

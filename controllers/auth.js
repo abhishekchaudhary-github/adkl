@@ -1,29 +1,35 @@
 require('dotenv').config()
-const jwt = require('jsonwebtoken')
-const bcryptjs = require('bcryptjs');
-const numSaltRounds = parseInt(process.env.numSaltRounds);
+const {StatusCodes} = require('http-status-codes')
 const User = require('../models/User')
 const UnauthenticatedError = require('../errors/unauthenticated')
-const JWT_secret = process.env.JWT_secret;
 
 const login= async (req,res)=>{
-    const {username,password} = req.body
-    const encrPass = await bcryptjs.hash(password,numSaltRounds)
-    const resp = await User.find({"username":username,"password":encrPass})
-    if(!resp){
-        throw new UnauthenticatedError('wrong username or password')
+    const {email,password} = req.body;
+    if(!email||!password){
+        throw new UnauthenticatedError('empty fields')
     }
-    const token = await jwt.sign({"username":username,"password":password},JWT_secret)
-    res.json({ user: { name: user.name }, token })
+    const user = await User.findOne({email});
+    if(!user){
+        throw new UnauthenticatedError('invalid credentails')
+    }
+    const comparePassword = await user.comparePassword(password)
+    if(!comparePassword){
+        throw new UnauthenticatedError('invalid credentials')
+    }
+    const token = user.createjwt()
+    res.json({ user: { name: user.username }, token })
 }
 
 const signup= async (req,res)=>{
     try{
-    const {username,email,password} = req.body
-    const encrPass = await bcryptjs.hash(password,numSaltRounds)
-    // jwl.sign({username,password},process.env.jwt_key)
-    const response = await User.create({"username":username,"email":email,"password":encrPass})
-    res.json(response)
+    const {username,email,password} = req.body 
+    const response = await User.create({"username":username,"email":email,"password":password})
+    // const response = await User.create({...req.body})
+    // const token = await jwt.sign({userId:response._id,name:response.username},'supersecret', {
+    //     expiresIn: '30d',
+    //   })
+    const token = response.createjwt()
+    res.status(StatusCodes.CREATED).json({user:{name:response.username}},token)
     }
     catch(err){
         console.log(err)
