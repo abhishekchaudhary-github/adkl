@@ -9,7 +9,8 @@ const authentication = (req,res,next)=>{
     const token = req.headers.authorization.split(' ')[1]
     try {
         const decodedAns = jwt.verify(token,process.env.JWT_secret)
-        req.user = {...decodedAns}
+        console.log(decodedAns)
+        req.user = {userId:decodedAns.userId, name:decodedAns.name}
         next()
 } catch(err) {
         throw new CustomAPIError("authentication error",401)

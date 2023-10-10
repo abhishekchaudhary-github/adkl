@@ -19,7 +19,7 @@ NewSchema.pre('save',async function(next){
 })
 
 NewSchema.methods.createjwt = function () {
-    return jwt.sign({userId:this._id,name:this.name},process.env.JWT_SECRET, {
+    return jwt.sign({userId:this._id,name:this.username},process.env.JWT_SECRET, {
         expiresIn:process.env.JWT_EXPIRES_IN
     })
 }
