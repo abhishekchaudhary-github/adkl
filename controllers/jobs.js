@@ -1,10 +1,13 @@
 const Jobs = require('../models/Job')
 const {StatusCodes} = require('http-status-codes')
+const {notFoundError} = require('../middleware/not-found')
 
 const get = async (req,res) => {
-    // let id = req.user.userId
-    // const response = await Jobs.find({'createdBy':id})
-    // res.status(StatusCodes.OK).json({job:response})
+    const response = await Jobs.find({'createdBy':req.user.userId,'_id':req.params.id})
+    if(!response){
+        throw new notFoundError('resources not found')
+    }
+    res.status(StatusCodes.OK).json({job:response})
 }
 
 const getall = async (req,res) => {
