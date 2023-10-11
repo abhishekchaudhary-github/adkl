@@ -22,7 +22,13 @@ const del = async (req,res) => {
 }
 
 const update = async (req,res) => {
-    res.send()
+    const updatingContent = req.body
+    //maybe buggy line
+    if(req.body.company==''||req.body.position==''){
+        throw new CustomAPIError("empty fields not allowed",400)
+    }
+    const response = await Jobs.updateOne({'createdBy' : req.user.userId, _id: req.params.id }, { ...updatingContent },{runValidators:true,new:true});
+    res.status(StatusCodes.ACCEPTED).json({job : response})
 }
 
 const create = async (req,res) => {
